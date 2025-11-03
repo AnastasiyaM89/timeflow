@@ -1,6 +1,6 @@
 import { getToken } from './auth-utils';
 
-const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'http://localhost:5173';
 
 export function request(endpoint, method = 'GET', data, customHeaders = {}) {
 	if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
@@ -10,7 +10,12 @@ export function request(endpoint, method = 'GET', data, customHeaders = {}) {
 		);
 	}
 
-	const url = new URL(endpoint, BASE_URL).toString();
+	const apiEndpoint =
+		endpoint.startsWith('http://') || endpoint.startsWith('https://')
+			? endpoint
+			: `/api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+
+	const url = new URL(apiEndpoint, BASE_URL).toString();
 
 	const userSpecifiedHeaders = { ...customHeaders };
 
