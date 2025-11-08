@@ -7,11 +7,12 @@ import { Loader } from '../loader/Loader';
 export const PrivateRoute = () => {
 	const { roleId, isLoading, isAuth } = useSelector((state) => state.user);
 
-	if (isLoading) {
-		return <Loader />;
-	}
 	if (!isAuth || roleId === ROLE.GUEST) {
 		return <Navigate to="/info" replace />;
+	}
+
+	if (isLoading) {
+		return <Loader />;
 	}
 
 	return <Outlet />;

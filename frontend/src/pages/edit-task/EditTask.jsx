@@ -32,7 +32,7 @@ const EditTaskContainer = ({ className }) => {
 
 	const [newCategoryInput, setNewCategoryInput] = useState('');
 
-	const { register, handleSubmit, reset, watch } = useForm({
+	const { register, handleSubmit, reset, watch, setValue } = useForm({
 		defaultValues: {
 			title: '',
 			category: '',

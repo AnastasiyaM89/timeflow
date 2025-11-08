@@ -1,10 +1,10 @@
 const express = require("express");
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
+
+router.use("/", require("./authRoutes"));
 
 router.use("/categories", require("./categoryRoutes"));
 
 router.use("/tasks", require("./taskRoutes"));
-
-router.use("/", require("./authRoutes"));
 
 module.exports = router;

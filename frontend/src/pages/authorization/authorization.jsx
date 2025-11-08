@@ -61,7 +61,10 @@ const LoginPageContainer = ({ className }) => {
 	const onSubmit = useCallback(
 		async ({ login, password }) => {
 			try {
-				const responseData = await request('/login', 'POST', { login, password });
+				const responseData = await request('/login', 'POST', {
+					login,
+					password,
+				});
 
 				if (responseData.error) {
 					setServerError(`Ошибка запроса: ${responseData.error}`);
@@ -69,6 +72,8 @@ const LoginPageContainer = ({ className }) => {
 				}
 
 				if (responseData.user && responseData.token) {
+					localStorage.setItem('token', responseData.token);
+
 					sessionStorage.setItem(
 						'userData',
 						JSON.stringify({

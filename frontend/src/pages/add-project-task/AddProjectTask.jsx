@@ -67,7 +67,6 @@ const AddProjectTaskContainer = ({ className }) => {
 			<div className={className}>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Input
-						div
 						className="name-task"
 						{...register('title', { required: true })}
 						placeholder="Название задачи"

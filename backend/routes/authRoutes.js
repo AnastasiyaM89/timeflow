@@ -2,8 +2,42 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const authMiddleware = require("../middleware/authMiddleware");
+
+router.post("/login", async (req, res) => {
+  const { login, password } = req.body;
+  try {
+    const user = await User.findOne({ login });
+    if (!user)
+      return res.status(400).json({ message: "Пользователь не найден" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Неверный пароль" });
+
+    const token = jwt.sign(
+      { id: user._id.toString(), role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
+    res.json({
+      token: token,
+      user: {
+        _id: user._id,
+        username: user.login,
+        role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        gender: user.gender,
+      },
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: err.message || "Внутренняя ошибка сервера" });
+  }
+});
 
 router.post("/register", async (req, res) => {
   const { login, password } = req.body;
@@ -57,40 +91,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
-  const { login, password } = req.body;
-  try {
-    const user = await User.findOne({ login });
-    if (!user)
-      return res.status(400).json({ message: "Пользователь не найден" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Неверный пароль" });
-
-    const token = jwt.sign(
-      { id: user._id.toString(), role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "30d" }
-    );
-    res.json({
-      token: token,
-      user: {
-        _id: user._id,
-        username: user.login,
-        role: user.role,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        gender: user.gender,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
 router.post("/logout", (req, res) => {
-  res.cookie("token", "", { httpOnly: true, expires: new Date(0) }).send({});
+  res.cookie("token", "", { httpOnly: true, expires: new Date(0) });
+  res.json({ message: "Успешно вышли из системы" });
 });
 
 router.put("/profile", authMiddleware, async (req, res) => {

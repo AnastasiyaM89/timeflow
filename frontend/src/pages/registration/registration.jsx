@@ -61,7 +61,10 @@ const RegisterPageContainer = ({ className }) => {
 		setServerError(null);
 
 		try {
-			const responseData = await request('/register', 'POST', { login, password });
+			const responseData = await request('/register', 'POST', {
+				login,
+				password,
+			});
 
 			if (responseData.error) {
 				setServerError(responseData.error || responseData.message);

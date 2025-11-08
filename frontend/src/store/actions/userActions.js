@@ -1,8 +1,6 @@
 import { request } from '../../utils/request';
 import { setUser } from '../../actions';
 
-const BASE_URL = 'http://localhost:5173';
-
 export const updateUser = (userId, userData) => {
 	return async (dispatch, getState) => {
 		try {

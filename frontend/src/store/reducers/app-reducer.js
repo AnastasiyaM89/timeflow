@@ -13,10 +13,8 @@ const initialAppState = {
 export const appReducer = (state = initialAppState, action) => {
 	switch (action.type) {
 		case ACTION_TYPE.LOGOUT:
-			return {
-				...state,
-				wasLogout: !state.wasLogout,
-			};
+			return initialAppState;
+
 		case ACTION_TYPE.OPEN_MODAL:
 			return {
 				...state,
